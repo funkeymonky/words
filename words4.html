@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Animated Fish</title>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      margin: 0;
+      overflow: hidden;
+      //cursor: pointer;
+    }
+
+    .fish-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .fish {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 20px;
+      color: white;
+      transition: font-size 0.2s;
+      user-select: none;
+      animation: colorChange 3s alternate infinite;
+    }
+
+    @keyframes colorChange {
+      0% {
+        color: gray;
+      }
+      100% {
+        color: white;
+      }
+    }
+
+    #speed-info {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="fish-container"></div>
+
+
+  <script>
+	const words = [
+	  { original: "Қош келдіңіз", translation: "Добро пожаловать" },
+	  { original: "Саламат кешіріңіз", translation: "Прошу прощения" },
+	  { original: "алма", translation: "яблоко" },
+	  { original: "мысық", translation: "кошка" },
+	  { original: "ит", translation: "собака" },
+	  { original: "нөл", translation: "ноль" },
+	  { original: "бір", translation: "один" },
+	  { original: "екі", translation: "два" },
+	  { original: "үш", translation: "три" },
+	  { original: "төрт", translation: "четыре" },
+	  { original: "бес", translation: "пять" },
+	  { original: "алты", translation: "шесть" },
+	  { original: "жеті", translation: "семь" },
+	  { original: "сегіз", translation: "восемь" },
+	  { original: "тоғыз", translation: "девять" },
+	  { original: "он", translation: "десять" },
+	  { original: "жиырма", translation: "двадцать" },
+	  { original: "отыз", translation: "тридцать" },
+	  { original: "қырық", translation: "сорок" },
+	  { original: "елу", translation: "пятьдесят" },
+	  { original: "алпыс [алтпыс]", translation: "шестьдесят" },
+	  { original: "жетпіс", translation: "семьдесят" },
+	  { original: "сексен", translation: "восемьдесят" },
+	  { original: "тоқсан", translation: "девяносто" },
+	  { original: "жүз", translation: "сто" },
+	  { original: "мың", translation: "тысяча" },
+	  { original: "миллион", translation: "миллион" },
+	  { original: "жақсы", translation: "хорошо" },
+	  { original: "жарайды", translation: "хорошо" },
+	  { original: "әдемі", translation: "красивый" },
+	  { original: "әтеш", translation: "петух" },
+	  { original: "ән", translation: "песня" },
+	  { original: "дауысты", translation: "гласная" },
+	  { original: "дауыссыз", translation: "согласная" },
+	  { original: "жұмсақ әріп", translation: "мягкая буква" },
+	  { original: "қатты әріп", translation: "твёрдая буква" },
+	  { original: "сөз", translation: "слово" },
+	  { original: "әріп", translation: "буква" },
+	  { original: "ағаш", translation: "дерево" },
+	  { original: "ғимарат", translation: "здание" },
+	  { original: "өзен", translation: "река" },
+	  { original: "бөгет", translation: "плотина" },
+	  { original: "көше", translation: "улица" },
+	  { original: "даңғыл", translation: "проспект" },
+	  { original: "қала", translation: "город" },
+	  { original: "ықшамаудан", translation: "микрорайон" },
+	  { original: "шағын аудан", translation: "микрорайон" },
+	  { original: "керемет", translation: "отлично" },
+	  { original: "келісемін", translation: "согласен" },
+	  { original: "Бұл кім?", translation: "Кто это?" },
+	  { original: "Бұл не?", translation: "Что это?" },
+	  { original: "Кiм?", translation: "Кто?" },
+	  { original: "Не?", translation: "Что?" },
+	  { original: "Қайда?", translation: "Где?" },
+	  { original: "дұрыс", translation: "правильно" },
+      // Добавьте больше слов
+    ];
+
+    const fishContainer = document.querySelector('.fish-container');
+    const fishArray = [];
+
+    let averageSpeed = 1; // Средняя скорость движения для всех слов
+
+    function createFish(word) {
+      const fish = document.createElement('div');
+      fish.classList.add('fish');
+      fish.textContent = word.original;
+
+      // Установите каждому слову свою скорость
+      const fishSpeedX = Math.random() * 2 + 0.5;
+      const fishSpeedY = Math.random() * 2 + 0.5;
+	  console.log(`X: ${fishSpeedX.toFixed(2)}, Y: ${fishSpeedY.toFixed(2)}, A: ${averageSpeed.toFixed(2)}`);	
+	  
+	  let directionX = 1;
+	  let directionY = 1;
+
+      let isFrozen = false;
+
+      let x = Math.random() * window.innerWidth;
+      let y = Math.random() * window.innerHeight;
+
+      fish.style.left = x + 'px';
+      fish.style.top = y + 'px';
+
+      fishContainer.appendChild(fish);
+
+      function swim() {
+        if (!isFrozen) {
+          // Получаем среднюю скорость для всех слов с помощью стрелок
+          // Используйте полученную среднюю скорость для изменения позиции слова
+          x += fishSpeedX * averageSpeed * directionX;
+          y += fishSpeedY * averageSpeed * directionY;
+
+
+			
+          // Проверка и отражение от границ экрана
+          if (x < 0 || x + fish.clientWidth > window.innerWidth) {
+			directionX = -directionX;
+            x = Math.max(0, Math.min(x, window.innerWidth - fish.clientWidth));
+          }
+          if (y < 0 || y + fish.clientHeight > window.innerHeight) {
+			directionY = -directionY;
+            y = Math.max(0, Math.min(y, window.innerHeight - fish.clientHeight));
+          }
+
+          fish.style.left = x + 'px';
+          fish.style.top = y + 'px';
+        }
+
+        requestAnimationFrame(swim);
+      }
+
+      fishArray.push(swim);
+
+      fish.addEventListener('mouseover', () => {
+        fish.style.fontSize = '36px';
+        fish.style.cursor = 'pointer';
+        isFrozen = true;
+		  fishSpeedX = 0; // Устанавливаем скорость X в ноль при остановке
+		  fishSpeedY = 0; // Устанавливаем скорость Y в ноль при остановке		
+      });
+
+      fish.addEventListener('click', (e) => {
+        if (e.detail === 1) {
+          // Одиночное нажатие - менять местами перевод и оригинал
+          const currentText = fish.textContent;
+          fish.textContent = currentText === word.original ? word.translation : word.original;
+		  
+        } else if (e.detail === 2) {
+          // Двойное нажатие - переключение движения или стояния на месте
+          isFrozen = !isFrozen;
+          if (isFrozen) {
+            fish.style.fontSize = '20px';
+			fishSpeedX = Math.random() * 2 + 0.5;
+			fishSpeedY = Math.random() * 2 + 0.5;	
+			
+          } else {
+            fish.style.fontSize = '36px';
+			  fishSpeedX = 0; // Устанавливаем скорость X в ноль при остановке
+			  fishSpeedY = 0; // Устанавливаем скорость Y в ноль при остановке	
+          }
+        }
+      });
+
+      fish.addEventListener('mouseout', () => {
+		fish.style.cursor = '';
+      });
+
+
+      swim();
+
+    }
+
+    words.forEach(word => createFish(word));
+
+    // Реакция на клавиши
+    const keys = {};
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        // Увеличиваем среднюю скорость движения для всех слов
+        averageSpeed = Math.min(2, averageSpeed + 0.01);
+      } else if (e.key === 'ArrowDown') {
+        // Уменьшаем среднюю скорость движения для всех слов
+        averageSpeed = Math.max(0, averageSpeed - 0.01);
+      }
+      keys[e.key] = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      keys[e.key] = false;
+    });
+  </script>
+</body>
+
+</html>
