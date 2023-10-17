@@ -22,7 +22,7 @@
     .fish {
       position: absolute;
       white-space: nowrap;
-      font-size: 20px;
+      font-size: 10px;
       color: white;
       transition: font-size 0.2s;
       user-select: none;
@@ -218,11 +218,11 @@
 
 			
           // Проверка и отражение от границ экрана
-          if (x < 0 || x + fish.clientWidth > window.innerWidth) {
+          if (x < -100 || x + fish.clientWidth > window.innerWidth + 100) {
 			directionX = -directionX;
             x = Math.max(0, Math.min(x, window.innerWidth - fish.clientWidth));
           }
-          if (y < 0 || y + fish.clientHeight > window.innerHeight) {
+          if (y < -100 || y + fish.clientHeight  > window.innerHeight + 100) {
 			directionY = -directionY;
             y = Math.max(0, Math.min(y, window.innerHeight - fish.clientHeight));
           }
@@ -237,7 +237,7 @@
       fishArray.push(swim);
 
       fish.addEventListener('mouseover', () => {
-        fish.style.fontSize = '36px';
+        fish.style.fontSize = '16px';
         fish.style.cursor = 'pointer';
         isFrozen = true;
 		  fishSpeedX = 0; // Устанавливаем скорость X в ноль при остановке
@@ -254,12 +254,12 @@
           // Двойное нажатие - переключение движения или стояния на месте
           isFrozen = !isFrozen;
           if (isFrozen) {
-            fish.style.fontSize = '20px';
+            fish.style.fontSize = '10px';
 			fishSpeedX = Math.random() * 2 + 0.5;
 			fishSpeedY = Math.random() * 2 + 0.5;	
 			
           } else {
-            fish.style.fontSize = '36px';
+            fish.style.fontSize = '16px';
 			  fishSpeedX = 0; // Устанавливаем скорость X в ноль при остановке
 			  fishSpeedY = 0; // Устанавливаем скорость Y в ноль при остановке	
           }
